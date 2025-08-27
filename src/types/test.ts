@@ -22,4 +22,11 @@ export interface UserAnswer {
   score: number;
 }
 
+export interface SharedResultData {
+  percentage: number;
+  resultIndex: number;
+  isShared: boolean;
+  language?: string;
+}
+
 export type TestPhase = 'intro' | 'question' | 'loading' | 'result';

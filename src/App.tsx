@@ -28,6 +28,11 @@ const App: React.FC = () => {
   const checkSharedResult = useCallback(() => {
     const sharedData = decodeResultFromUrl();
     if (sharedData) {
+      // 공유된 언어 정보가 있으면 언어 변경
+      if (sharedData.language && (sharedData.language === 'ko' || sharedData.language === 'en')) {
+        i18n.changeLanguage(sharedData.language);
+      }
+      
       // 공유된 결과가 있으면 해당 결과로 바로 이동
       const sharedResult = results.find(r => r.percentage === sharedData.percentage);
       if (sharedResult) {
@@ -36,7 +41,7 @@ const App: React.FC = () => {
         setIsSharedResult(true);
       }
     }
-  }, []); // 의존성 없음 - 모든 필요한 값이 함수 내부에서 직접 계산됨
+  }, [i18n]); // i18n 의존성 추가
 
   useEffect(() => {
     // i18n 초기화 완료 확인

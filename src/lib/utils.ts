@@ -1,6 +1,4 @@
-export const cn = (...classes: (string | undefined | null | false)[]) => {
-  return classes.filter(Boolean).join(' ');
-};
+import { SharedResultData } from '../types/test';
 
 export const shareResults = async (title: string, text: string, url?: string) => {
   const shareUrl = url || window.location.href;
@@ -65,21 +63,28 @@ export const clearUrlParams = () => {
 };
 
 // 결과 상태를 URL에 인코딩/디코딩
-export const encodeResultToUrl = (percentage: number, resultIndex: number) => {
-  const params = {
+export const encodeResultToUrl = (percentage: number, resultIndex: number, language?: string) => {
+  const params: Record<string, string> = {
     result: percentage.toString(),
     type: resultIndex.toString(),
     shared: 'true'
   };
+  
+  // 언어 정보가 있으면 URL에 포함
+  if (language) {
+    params.lang = language;
+  }
+  
   setUrlParams(params);
   return window.location.href;
 };
 
-export const decodeResultFromUrl = () => {
+export const decodeResultFromUrl = (): SharedResultData | null => {
   const params = getUrlParams();
   const percentage = params.get('result');
   const type = params.get('type');
   const shared = params.get('shared');
+  const language = params.get('lang'); // 언어 정보 추가
   
   if (percentage && type && shared) {
     const parsedPercentage = parseInt(percentage, 10);
@@ -105,7 +110,8 @@ export const decodeResultFromUrl = () => {
     return {
       percentage: parsedPercentage,
       resultIndex: parsedType,
-      isShared: true
+      isShared: true,
+      language: language || undefined // 언어 정보 포함
     };
   }
   return null;

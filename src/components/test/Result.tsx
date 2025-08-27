@@ -20,8 +20,8 @@ const Result: React.FC<ResultProps> = ({ result, onRestart, isShared = false }) 
     // 결과 인덱스 찾기
     const resultIndex = results.findIndex(r => r.percentage === result.percentage);
     
-    // URL에 결과 정보 인코딩
-    const shareUrl = encodeResultToUrl(result.percentage, resultIndex);
+    // URL에 결과 정보와 현재 언어 인코딩
+    const shareUrl = encodeResultToUrl(result.percentage, resultIndex, currentLang);
     
     const shareText = t('result.shareText', { 
       percentage: result.percentage, 
