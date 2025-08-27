@@ -130,13 +130,31 @@ const Question: React.FC<QuestionProps> = ({
                 fontSize: '1rem',
                 transition: 'all 0.3s ease'
               }}
+              // 터치 디바이스 대응: hover 지원 디바이스에서만 호버 효과 적용
               onMouseEnter={(e) => {
+                // hover를 지원하는 디바이스에서만 호버 효과 적용
+                if (window.matchMedia('(hover: hover)').matches) {
+                  e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)';
+                  e.currentTarget.style.borderColor = '#ff6b6b';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (window.matchMedia('(hover: hover)').matches) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }
+              }}
+              // 터치 이벤트로 모바일에서의 시각적 피드백
+              onTouchStart={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)';
                 e.currentTarget.style.borderColor = '#ff6b6b';
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              onTouchEnd={(e) => {
+                // 터치 종료 후 약간의 지연을 두고 원상복구
+                setTimeout(() => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }, 150);
               }}
             >
               <span style={{ marginRight: '1rem', fontWeight: 'bold', color: '#ff6b6b' }}>
