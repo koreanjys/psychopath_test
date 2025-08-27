@@ -8,6 +8,11 @@ interface IntroProps {
 const Intro: React.FC<IntroProps> = ({ onStart }) => {
   const { t } = useTranslation();
 
+  const handleStartClick = () => {
+    console.log('Start button clicked'); // 디버깅용
+    onStart();
+  };
+
   const introStyle = {
     container: {
       minHeight: '100vh',
@@ -104,7 +109,7 @@ const Intro: React.FC<IntroProps> = ({ onStart }) => {
       
       <button 
         style={introStyle.startButton}
-        onClick={onStart}
+        onClick={handleStartClick}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-2px)';
           e.currentTarget.style.boxShadow = '0 15px 40px rgba(238, 90, 82, 0.4)';
