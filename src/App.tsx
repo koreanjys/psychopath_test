@@ -11,6 +11,8 @@ import Loading from './components/test/Loading';
 import Result from './components/test/Result';
 import { questions } from './data/questions';
 import { calculateResult } from './data/scoring';
+import { results } from './data/results';
+import { decodeResultFromUrl, clearUrlParams } from './lib/utils';
 import { TestPhase, UserAnswer, TestResult } from './types/test';
 
 const App: React.FC = () => {
@@ -20,17 +22,34 @@ const App: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   const [result, setResult] = useState<TestResult | null>(null);
+  const [isSharedResult, setIsSharedResult] = useState(false);
 
   useEffect(() => {
     // i18n 초기화 완료 확인
     if (i18n.isInitialized) {
       setIsI18nReady(true);
+      checkSharedResult();
     } else {
       i18n.on('initialized', () => {
         setIsI18nReady(true);
+        checkSharedResult();
       });
     }
   }, [i18n]);
+
+  // URL에서 공유된 결과 확인
+  const checkSharedResult = () => {
+    const sharedData = decodeResultFromUrl();
+    if (sharedData) {
+      // 공유된 결과가 있으면 해당 결과로 바로 이동
+      const sharedResult = results.find(r => r.percentage === sharedData.percentage);
+      if (sharedResult) {
+        setResult(sharedResult);
+        setPhase('result');
+        setIsSharedResult(true);
+      }
+    }
+  };
 
   const handleStart = () => {
     console.log('Starting test...'); // 디버깅용
@@ -67,6 +86,8 @@ const App: React.FC = () => {
     setCurrentQuestionIndex(0);
     setAnswers([]);
     setResult(null);
+    setIsSharedResult(false);
+    clearUrlParams(); // URL 파라미터 클리어
   };
 
   const appStyle = {
@@ -99,7 +120,7 @@ const App: React.FC = () => {
       case 'loading':
         return <Loading onComplete={handleLoadingComplete} />;
       case 'result':
-        return result ? <Result result={result} onRestart={handleRestart} /> : null;
+        return result ? <Result result={result} onRestart={handleRestart} isShared={isSharedResult} /> : null;
       default:
         return <Intro onStart={handleStart} />;
     }

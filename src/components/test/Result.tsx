@@ -2,24 +2,33 @@ import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
 import { TestResult as TestResultType } from '../../types/test';
-import { shareResults, isMobile } from '../../lib/utils';
+import { shareResults, isMobile, encodeResultToUrl } from '../../lib/utils';
+import { results } from '../../data/results';
 
 interface ResultProps {
   result: TestResultType;
   onRestart: () => void;
+  isShared?: boolean;
 }
 
-const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
+const Result: React.FC<ResultProps> = ({ result, onRestart, isShared = false }) => {
   const { t, i18n } = useTranslation();
   const resultRef = useRef<HTMLDivElement>(null);
   const currentLang = i18n.language as 'ko' | 'en';
 
   const handleShare = () => {
+    // 결과 인덱스 찾기
+    const resultIndex = results.findIndex(r => r.percentage === result.percentage);
+    
+    // URL에 결과 정보 인코딩
+    const shareUrl = encodeResultToUrl(result.percentage, resultIndex);
+    
     const shareText = t('result.shareText', { 
       percentage: result.percentage, 
       title: result.title[currentLang] 
     });
-    shareResults(t('result.shareTitle'), shareText);
+    
+    shareResults(t('result.shareTitle'), shareText, shareUrl);
   };
 
   const handleSave = async () => {
@@ -213,12 +222,31 @@ const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
       boxShadow: '0 8px 20px rgba(245, 158, 11, 0.3)',
       position: 'relative' as const,
       overflow: 'hidden' as const
+    },
+    sharedBanner: {
+      background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+      color: '#fff',
+      padding: '1rem',
+      borderRadius: '0.8rem',
+      marginBottom: '1rem',
+      textAlign: 'center' as const,
+      fontSize: '0.9rem',
+      boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
+      border: '1px solid rgba(139, 92, 246, 0.4)'
     }
   };
 
   return (
     <div style={resultStyle.container}>
       <div ref={resultRef} style={resultStyle.resultCard}>
+        {isShared && (
+          <div style={resultStyle.sharedBanner}>
+            <strong>{t('result.sharedResult')}</strong>
+            <br />
+            {t('result.sharedDescription')}
+          </div>
+        )}
+        
         <h2 style={resultStyle.title}>{t('result.title')}</h2>
         
         <div style={resultStyle.percentageContainer}>
@@ -270,7 +298,7 @@ const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
               e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
             }}
           >
-            {t('result.retryButton')}
+            {isShared ? t('result.takeTest') : t('result.retryButton')}
           </button>
           
           <button

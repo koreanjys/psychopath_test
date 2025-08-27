@@ -27,7 +27,10 @@
     "saveSuccess": "Result image saved successfully!",
     "downloadSuccess": "Result image downloaded!",
     "saveError": "Failed to save image. Please try again.",
-    "mobileDownloadTip": "Check the downloaded image in your gallery or save it to your photo album!"
+    "mobileDownloadTip": "Check the downloaded image in your gallery or save it to your photo album!",
+    "sharedResult": "🔗 Shared Result",
+    "sharedDescription": "This result was shared by someone else.",
+    "takeTest": "Take Test Myself"
   },
   "common": {
     "homeButton": "Go to JYBR Home",

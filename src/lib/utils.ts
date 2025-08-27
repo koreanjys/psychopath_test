@@ -26,3 +26,49 @@ export const downloadImage = (canvas: HTMLCanvasElement, filename: string) => {
 export const isMobile = () => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 };
+
+// URL 파라미터 관련 유틸리티 함수들
+export const getUrlParams = () => {
+  return new URLSearchParams(window.location.search);
+};
+
+export const setUrlParams = (params: Record<string, string>) => {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.pushState({}, '', url.toString());
+};
+
+export const clearUrlParams = () => {
+  const url = new URL(window.location.href);
+  url.search = '';
+  window.history.replaceState({}, '', url.toString());
+};
+
+// 결과 상태를 URL에 인코딩/디코딩
+export const encodeResultToUrl = (percentage: number, resultIndex: number) => {
+  const params = {
+    result: percentage.toString(),
+    type: resultIndex.toString(),
+    shared: 'true'
+  };
+  setUrlParams(params);
+  return window.location.href;
+};
+
+export const decodeResultFromUrl = () => {
+  const params = getUrlParams();
+  const percentage = params.get('result');
+  const type = params.get('type');
+  const shared = params.get('shared');
+  
+  if (percentage && type && shared) {
+    return {
+      percentage: parseInt(percentage),
+      resultIndex: parseInt(type),
+      isShared: true
+    };
+  }
+  return null;
+};
