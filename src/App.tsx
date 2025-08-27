@@ -12,7 +12,7 @@ import Result from './components/test/Result';
 import { questions } from './data/questions';
 import { calculateResult } from './data/scoring';
 import { results } from './data/results';
-import { decodeResultFromUrl, clearUrlParams } from './lib/utils';
+import { decodeResultFromUrl, clearUrlParams, updateMetadata } from './lib/utils';
 import { TestPhase, UserAnswer, TestResult } from './types/test';
 
 const App: React.FC = () => {
@@ -65,6 +65,16 @@ const App: React.FC = () => {
       });
     }
   }, [i18n, checkSharedResult]); // checkSharedResult 의존성 추가
+
+  // 언어 변경 시 메타데이터 업데이트
+  useEffect(() => {
+    if (isI18nReady) {
+      const currentLang = i18n.language.toLowerCase().startsWith('ko') ? 'ko' : 'en';
+      const title = t('meta.title');
+      const description = t('meta.description');
+      updateMetadata(title, description, currentLang);
+    }
+  }, [i18n.language, isI18nReady, t]);
 
   const handleStart = () => {
     console.log('Starting test...'); // 디버깅용

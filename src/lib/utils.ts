@@ -1,5 +1,41 @@
 import { SharedResultData } from '../types/test';
 
+// 동적 메타데이터 업데이트 함수
+export const updateMetadata = (title: string, description: string, lang: 'ko' | 'en' = 'ko') => {
+  // 페이지 제목 업데이트
+  document.title = title;
+  
+  // HTML lang 속성 업데이트
+  document.documentElement.lang = lang;
+  
+  // 메타 태그 업데이트 함수
+  const updateMetaTag = (selector: string, content: string) => {
+    let element = document.querySelector(selector) as HTMLMetaElement;
+    if (element) {
+      element.content = content;
+    } else {
+      // 태그가 없으면 생성
+      element = document.createElement('meta');
+      if (selector.includes('property')) {
+        element.setAttribute('property', selector.split('=')[1].replace(/[\[\]"]/g, ''));
+      } else {
+        element.setAttribute('name', selector.split('=')[1].replace(/[\[\]"]/g, ''));
+      }
+      element.content = content;
+      document.head.appendChild(element);
+    }
+  };
+  
+  // 각종 메타 태그 업데이트
+  updateMetaTag('meta[name="description"]', description);
+  updateMetaTag('meta[property="og:title"]', title);
+  updateMetaTag('meta[property="og:description"]', description);
+  updateMetaTag('meta[name="twitter:title"]', title);
+  updateMetaTag('meta[name="twitter:description"]', description);
+  
+  console.log('Meta tags updated:', { title, description, lang });
+};
+
 export const shareResults = async (title: string, text: string, url?: string) => {
   const shareUrl = url || window.location.href;
   

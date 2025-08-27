@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "title": "Psychopath Test - Truth in Darkness",
+    "description": "Explore the dark side hidden deep within you. Psychopath tendency test that analyzes your hidden personality through 5 psychological questions.",
+    "resultTitle": "My Psychopath Test Result: {{percentage}}% - {{type}}",
+    "resultDescription": "Check your {{percentage}}% psychopath tendency result. {{type}} - Provides psychological analysis and detailed results."
+  },
   "intro": {
     "title": "Psychopath Test",
     "subtitle": "Truth in Darkness",

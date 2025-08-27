@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "title": "사이코패스 테스트 - 어둠 속 진실",
+    "description": "당신의 내면 깊숙한 어두운 면을 탐구하는 사이코패스 성향 테스트. 5개의 심리학적 질문으로 숨겨진 성격을 분석합니다.",
+    "resultTitle": "내 사이코패스 테스트 결과: {{percentage}}% - {{type}}",
+    "resultDescription": "사이코패스 성향 {{percentage}}% 결과를 확인해보세요. {{type}} - 심리학적 분석과 상세한 결과를 제공합니다."
+  },
   "intro": {
     "title": "사이코패스 테스트",
     "subtitle": "어둠 속 진실",

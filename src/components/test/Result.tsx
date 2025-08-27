@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
 import { TestResult as TestResultType } from '../../types/test';
-import { shareResults, isMobile, encodeResultToUrl } from '../../lib/utils';
+import { shareResults, isMobile, encodeResultToUrl, updateMetadata } from '../../lib/utils';
 import { results } from '../../data/results';
 
 interface ResultProps {
@@ -24,6 +24,19 @@ const Result: React.FC<ResultProps> = ({ result, onRestart, isShared = false }) 
   };
   
   const currentLang = normalizeLanguage(i18n.language || 'ko');
+
+  // 결과 페이지 메타데이터 업데이트
+  useEffect(() => {
+    const title = t('meta.resultTitle', { 
+      percentage: result.percentage, 
+      type: result.title[currentLang] 
+    });
+    const description = t('meta.resultDescription', { 
+      percentage: result.percentage, 
+      type: result.title[currentLang] 
+    });
+    updateMetadata(title, description, currentLang);
+  }, [result, currentLang, t]);
 
   const handleShare = () => {
     // 결과 인덱스 찾기
