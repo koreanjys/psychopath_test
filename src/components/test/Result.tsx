@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TestResult as TestResultType } from '../../types/test';
-import { shareResults, downloadImage, isMobile } from '../../lib/utils';
+import { shareResults, isMobile } from '../../lib/utils';
 
 interface ResultProps {
   result: TestResultType;
