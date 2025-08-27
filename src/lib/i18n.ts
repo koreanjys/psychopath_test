@@ -20,8 +20,21 @@ i18n
     },
     detection: {
       order: ['navigator', 'localStorage', 'cookie'],
-      caches: ['localStorage', 'cookie']
-    }
+      caches: ['localStorage', 'cookie'],
+      lookupFromPathIndex: 0,
+      lookupFromSubdomainIndex: 0,
+      // 한국어 관련 모든 코드를 'ko'로 매핑
+      convertDetectedLanguage: (lng: string) => {
+        // 한국어 관련 코드들 (ko, ko-KR, ko-kr, kor 등)
+        if (lng.toLowerCase().startsWith('ko')) return 'ko';
+        // 그 외는 모두 영어로
+        return 'en';
+      }
+    },
+    // 지원하는 언어 명시
+    supportedLngs: ['ko', 'en'],
+    // 지원하지 않는 언어는 fallback 사용
+    nonExplicitSupportedLngs: true
   });
 
 export default i18n;
