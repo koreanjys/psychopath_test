@@ -86,6 +86,8 @@ export const decodeResultFromUrl = (): SharedResultData | null => {
   const shared = params.get('shared');
   const language = params.get('lang'); // 언어 정보 추가
   
+  console.log('URL parameters:', { percentage, type, shared, language });
+  
   if (percentage && type && shared) {
     const parsedPercentage = parseInt(percentage, 10);
     const parsedType = parseInt(type, 10);
@@ -107,12 +109,15 @@ export const decodeResultFromUrl = (): SharedResultData | null => {
       return null;
     }
     
-    return {
+    const result = {
       percentage: parsedPercentage,
       resultIndex: parsedType,
       isShared: true,
       language: language || undefined // 언어 정보 포함
     };
+    
+    console.log('Decoded shared result:', result);
+    return result;
   }
   return null;
 };

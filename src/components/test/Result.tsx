@@ -14,14 +14,32 @@ interface ResultProps {
 const Result: React.FC<ResultProps> = ({ result, onRestart, isShared = false }) => {
   const { t, i18n } = useTranslation();
   const resultRef = useRef<HTMLDivElement>(null);
-  const currentLang = i18n.language as 'ko' | 'en';
+  
+  // 언어 매핑: ko-KR, ko-kr, ko 등을 모두 'ko'로, en-US, en-us, en 등을 모두 'en'으로
+  const normalizeLanguage = (lang: string): 'ko' | 'en' => {
+    const lowerLang = lang.toLowerCase();
+    if (lowerLang.startsWith('ko')) return 'ko';
+    if (lowerLang.startsWith('en')) return 'en';
+    return 'ko'; // 기본값
+  };
+  
+  const currentLang = normalizeLanguage(i18n.language || 'ko');
 
   const handleShare = () => {
     // 결과 인덱스 찾기
     const resultIndex = results.findIndex(r => r.percentage === result.percentage);
     
+    console.log('Sharing with language:', {
+      originalLanguage: i18n.language,
+      normalizedLanguage: currentLang,
+      resultIndex,
+      percentage: result.percentage
+    });
+    
     // URL에 결과 정보와 현재 언어 인코딩
     const shareUrl = encodeResultToUrl(result.percentage, resultIndex, currentLang);
+    
+    console.log('Generated share URL:', shareUrl);
     
     const shareText = t('result.shareText', { 
       percentage: result.percentage, 

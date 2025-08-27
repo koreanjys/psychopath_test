@@ -28,9 +28,19 @@ const App: React.FC = () => {
   const checkSharedResult = useCallback(() => {
     const sharedData = decodeResultFromUrl();
     if (sharedData) {
+      // 언어 정규화 함수
+      const normalizeLanguage = (lang: string): 'ko' | 'en' => {
+        const lowerLang = lang.toLowerCase();
+        if (lowerLang.startsWith('ko')) return 'ko';
+        if (lowerLang.startsWith('en')) return 'en';
+        return 'ko'; // 기본값
+      };
+      
       // 공유된 언어 정보가 있으면 언어 변경
-      if (sharedData.language && (sharedData.language === 'ko' || sharedData.language === 'en')) {
-        i18n.changeLanguage(sharedData.language);
+      if (sharedData.language) {
+        const normalizedLang = normalizeLanguage(sharedData.language);
+        console.log('Shared language detected:', sharedData.language, '→', normalizedLang);
+        i18n.changeLanguage(normalizedLang);
       }
       
       // 공유된 결과가 있으면 해당 결과로 바로 이동
