@@ -84,6 +84,8 @@ const Question: React.FC<QuestionProps> = ({
           <img 
             src={question.image} 
             alt="Question image"
+            loading="eager"
+            decoding="async"
             style={{
               width: '100%',
               maxWidth: '400px',
@@ -91,7 +93,12 @@ const Question: React.FC<QuestionProps> = ({
               objectFit: 'cover',
               borderRadius: '1rem',
               boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
-              border: '2px solid rgba(255, 107, 107, 0.3)'
+              border: '2px solid rgba(255, 107, 107, 0.3)',
+              transition: 'opacity 0.3s ease',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)' // 로딩 중 placeholder
+            }}
+            onLoad={(e) => {
+              e.currentTarget.style.opacity = '1';
             }}
             onError={(e) => {
               console.error('Image failed to load:', question.image);

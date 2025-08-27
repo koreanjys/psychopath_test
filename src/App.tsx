@@ -4,6 +4,7 @@ import './lib/i18n';
 import './index.css';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
+import ImagePreloader from './components/common/ImagePreloader';
 import Intro from './components/test/Intro';
 import Question from './components/test/Question';
 import Loading from './components/test/Loading';
@@ -123,6 +124,7 @@ const App: React.FC = () => {
 
   return (
     <div style={appStyle}>
+      <ImagePreloader />
       <Header />
       {renderPhase()}
       <Footer />
