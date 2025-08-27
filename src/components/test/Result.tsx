@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import html2canvas from 'html2canvas';
 import { TestResult as TestResultType } from '../../types/test';
 import { shareResults, isMobile } from '../../lib/utils';
 
@@ -24,21 +25,77 @@ const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
   const handleSave = async () => {
     if (!resultRef.current) return;
 
-    // HTML2Canvas 같은 라이브러리 없이 간단한 구현
-    // 실제 구현에서는 html2canvas 등을 사용하는 것을 권장
     try {
-      if (isMobile()) {
-        // 모바일에서는 스크린샷 기능 제한으로 인해 링크 공유로 대체
-        handleShare();
-      } else {
-        // PC에서는 간단히 현재 페이지의 URL을 복사
-        await navigator.clipboard.writeText(window.location.href);
-        alert(t('result.copySuccess'));
-      }
+      // Canvas로 결과 화면을 이미지로 변환
+      const canvas = await html2canvas(resultRef.current, {
+        backgroundColor: '#0c0c0c',
+        scale: 2, // 고해상도를 위한 스케일
+        useCORS: true,
+        allowTaint: true,
+        foreignObjectRendering: true,
+        logging: false
+      });
+
+      // Canvas를 Blob으로 변환
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+
+        const fileName = `psychopath-test-result-${result.percentage}%.png`;
+
+        if (isMobile()) {
+          // 모바일: 파일 다운로드로 사진첩 저장 유도
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          
+          // 모바일 사용자에게 안내 메시지
+          alert(t('result.mobileDownloadTip'));
+        } else {
+          // PC: File System Access API 지원 여부 확인
+          if ('showSaveFilePicker' in window) {
+            try {
+              const fileHandle = await (window as any).showSaveFilePicker({
+                suggestedName: fileName,
+                types: [{
+                  description: 'PNG 이미지',
+                  accept: { 'image/png': ['.png'] }
+                }]
+              });
+              const writable = await fileHandle.createWritable();
+              await writable.write(blob);
+              await writable.close();
+              alert(t('result.saveSuccess'));
+            } catch (error) {
+              // 사용자가 취소했거나 API를 지원하지 않는 경우 폴백
+              fallbackDownload(blob, fileName);
+            }
+          } else {
+            // 구형 브라우저는 일반 다운로드
+            fallbackDownload(blob, fileName);
+          }
+        }
+      }, 'image/png', 0.95);
     } catch (error) {
       console.error('Save failed:', error);
-      handleShare();
+      alert(t('result.saveError'));
     }
+  };
+
+  const fallbackDownload = (blob: Blob, fileName: string) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    alert(t('result.downloadSuccess'));
   };
 
   const getPercentageColor = (percentage: number) => {
@@ -151,9 +208,11 @@ const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
       boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)'
     },
     saveButton: {
-      background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+      background: 'linear-gradient(135deg, #f59e0b, #d97706)',
       color: '#fff',
-      boxShadow: '0 8px 20px rgba(139, 92, 246, 0.3)'
+      boxShadow: '0 8px 20px rgba(245, 158, 11, 0.3)',
+      position: 'relative' as const,
+      overflow: 'hidden' as const
     }
   };
 
@@ -219,14 +278,14 @@ const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
             onClick={handleSave}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 12px 25px rgba(139, 92, 246, 0.4)';
+              e.currentTarget.style.boxShadow = '0 12px 25px rgba(245, 158, 11, 0.4)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(139, 92, 246, 0.3)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(245, 158, 11, 0.3)';
             }}
           >
-            {t('result.saveButton')}
+            📱 {t('result.saveButton')}
           </button>
         </div>
       </div>

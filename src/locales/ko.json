@@ -23,7 +23,11 @@
     "saveButton": "결과 저장하기",
     "shareText": "나의 사이코패스 테스트 결과: {{percentage}}% - {{title}} | 어둠 속 진실 테스트",
     "copySuccess": "결과 링크가 클립보드에 복사되었습니다!",
-    "shareTitle": "사이코패스 테스트 결과"
+    "shareTitle": "사이코패스 테스트 결과",
+    "saveSuccess": "결과 이미지가 성공적으로 저장되었습니다!",
+    "downloadSuccess": "결과 이미지가 다운로드되었습니다!",
+    "saveError": "이미지 저장에 실패했습니다. 다시 시도해주세요.",
+    "mobileDownloadTip": "다운로드된 이미지를 갤러리에서 확인하거나 사진첩에 저장해주세요!"
   },
   "common": {
     "homeButton": "JYBR 홈으로",

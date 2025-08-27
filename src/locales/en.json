@@ -16,14 +16,18 @@
     "translationError": "Unable to load translation data."
   },
   "result": {
-    "title": "Test Results",
-    "percentage": "Psychopathic Tendency: {{percentage}}%",
-    "shareButton": "Share Results",
-    "retryButton": "Retry Test",
-    "saveButton": "Save Results",
-    "shareText": "My Psychopath Test Result: {{percentage}}% - {{title}} | Truth in Darkness Test",
+    "title": "Test Result",
+    "percentage": "Psychopath Tendency: {{percentage}}%",
+    "shareButton": "Share Result",
+    "retryButton": "Retake Test",
+    "saveButton": "Save Result",
+    "shareText": "My Psychopath Test Result: {{percentage}}% - {{title}} | Dark Truth Test",
     "copySuccess": "Result link copied to clipboard!",
-    "shareTitle": "Psychopath Test Results"
+    "shareTitle": "Psychopath Test Result",
+    "saveSuccess": "Result image saved successfully!",
+    "downloadSuccess": "Result image downloaded!",
+    "saveError": "Failed to save image. Please try again.",
+    "mobileDownloadTip": "Check the downloaded image in your gallery or save it to your photo album!"
   },
   "common": {
     "homeButton": "Go to JYBR Home",
