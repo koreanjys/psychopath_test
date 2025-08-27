@@ -78,6 +78,28 @@ const Question: React.FC<QuestionProps> = ({
       <div style={{ color: '#fff', textAlign: 'center', padding: '2rem', maxWidth: '600px' }}>
         <h2 style={{ marginBottom: '2rem' }}>{t('test.questionTitle')}</h2>
         <p style={{ marginBottom: '1rem' }}>{t('test.questionNumber', { current: currentIndex + 1, total: totalQuestions })}</p>
+        
+        {/* 질문 이미지 */}
+        <div style={{ marginBottom: '2rem' }}>
+          <img 
+            src={question.image} 
+            alt="Question image"
+            style={{
+              width: '100%',
+              maxWidth: '400px',
+              height: '250px',
+              objectFit: 'cover',
+              borderRadius: '1rem',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+              border: '2px solid rgba(255, 107, 107, 0.3)'
+            }}
+            onError={(e) => {
+              console.error('Image failed to load:', question.image);
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
+        
         <p style={{ marginBottom: '2rem', fontSize: '1.2rem', lineHeight: '1.6' }}>
           {question.text[currentLang]}
         </p>

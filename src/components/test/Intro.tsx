@@ -92,8 +92,8 @@ const Intro: React.FC<IntroProps> = ({ onStart }) => {
       
       <div style={introStyle.imageContainer}>
         <img 
-          src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=500&h=300&fit=crop" 
-          alt="Dark atmosphere"
+          src="/images/man-3151723_1280.jpg"
+          alt="Man in forest"
           style={introStyle.image}
         />
         {/* 개발자 참고: 위 이미지를 더 오싹한 분위기의 이미지로 교체하세요 */}
