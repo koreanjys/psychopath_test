@@ -109,3 +109,53 @@ a:focus-visible {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* 터치 디바이스용 호버 상태 제어 */
+.question-option-button {
+  /* 기본 상태 */
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 호버를 지원하는 디바이스에서만 호버 효과 적용 */
+@media (hover: hover) and (pointer: fine) {
+  .question-option-button:hover {
+    background: rgba(255, 107, 107, 0.2) !important;
+    border-color: #ff6b6b !important;
+  }
+}
+
+/* 터치 디바이스에서 호버 상태 강제 제거 */
+@media (hover: none) and (pointer: coarse) {
+  .question-option-button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  .question-option-button:hover,
+  .question-option-button:focus,
+  .question-option-button:active {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+/* 터치 하이라이트 완전 제거 */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 텍스트는 선택 가능하게 */
+p, span, div, h1, h2, h3, h4, h5, h6 {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

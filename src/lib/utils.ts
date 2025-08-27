@@ -2,17 +2,35 @@ export const cn = (...classes: (string | undefined | null | false)[]) => {
   return classes.filter(Boolean).join(' ');
 };
 
-export const shareResults = (title: string, text: string, url?: string) => {
+export const shareResults = async (title: string, text: string, url?: string) => {
+  const shareUrl = url || window.location.href;
+  
   if (navigator.share) {
-    navigator.share({
-      title,
-      text,
-      url: url || window.location.href
-    });
+    try {
+      await navigator.share({
+        title,
+        text,
+        url: shareUrl
+      });
+    } catch (error) {
+      console.error('Error sharing:', error);
+      // Web Share API 실패 시 폴백
+      fallbackShare(text, shareUrl);
+    }
   } else {
     // Fallback for browsers that don't support Web Share API
-    navigator.clipboard.writeText(`${text} ${url || window.location.href}`);
+    fallbackShare(text, shareUrl);
+  }
+};
+
+const fallbackShare = async (text: string, url: string) => {
+  try {
+    await navigator.clipboard.writeText(`${text} ${url}`);
     alert('링크가 클립보드에 복사되었습니다!');
+  } catch (error) {
+    console.error('Clipboard API failed:', error);
+    // 클립보드 API도 실패한 경우
+    prompt('링크를 복사하세요:', `${text} ${url}`);
   }
 };
 

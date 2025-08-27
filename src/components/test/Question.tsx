@@ -116,6 +116,7 @@ const Question: React.FC<QuestionProps> = ({
             <button 
               key={index}
               onClick={() => handleAnswer(index)}
+              className="question-option-button"
               style={{ 
                 background: 'rgba(255, 255, 255, 0.1)', 
                 color: '#fff', 
@@ -128,33 +129,49 @@ const Question: React.FC<QuestionProps> = ({
                 width: '100%',
                 textAlign: 'left',
                 fontSize: '1rem',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                // 터치 디바이스에서 tap highlight 비활성화
+                WebkitTapHighlightColor: 'transparent',
+                outline: 'none'
               }}
-              // 터치 디바이스 대응: hover 지원 디바이스에서만 호버 효과 적용
+              // 터치 디바이스에서 안전한 인터랙션
+              onMouseDown={(e) => {
+                e.preventDefault();
+                if (window.matchMedia('(hover: hover)').matches) {
+                  e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)';
+                  e.currentTarget.style.borderColor = '#ff6b6b';
+                }
+              }}
+              onMouseUp={(e) => {
+                if (window.matchMedia('(hover: hover)').matches) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }
+              }}
               onMouseEnter={(e) => {
-                // hover를 지원하는 디바이스에서만 호버 효과 적용
                 if (window.matchMedia('(hover: hover)').matches) {
                   e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)';
                   e.currentTarget.style.borderColor = '#ff6b6b';
                 }
               }}
               onMouseLeave={(e) => {
-                if (window.matchMedia('(hover: hover)').matches) {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                }
+                // 강제로 스타일 초기화
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
               }}
-              // 터치 이벤트로 모바일에서의 시각적 피드백
               onTouchStart={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)';
                 e.currentTarget.style.borderColor = '#ff6b6b';
               }}
               onTouchEnd={(e) => {
-                // 터치 종료 후 약간의 지연을 두고 원상복구
-                setTimeout(() => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                }, 150);
+                // 터치 종료 후 즉시 초기화
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              }}
+              onTouchCancel={(e) => {
+                // 터치 취소 시에도 초기화
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
               }}
             >
               <span style={{ marginRight: '1rem', fontWeight: 'bold', color: '#ff6b6b' }}>
