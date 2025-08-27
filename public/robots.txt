@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://psychopath.jybr.me/sitemap.xml

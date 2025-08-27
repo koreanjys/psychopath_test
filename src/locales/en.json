@@ -1,0 +1,26 @@
+{
+  "intro": {
+    "title": "Psychopath Test",
+    "subtitle": "Truth in Darkness",
+    "description": "Explore the dark side hidden deep within you. Through 5 psychological questions, you can discover your true self. This test is based on scientific evidence and objectively analyzes your hidden tendencies.",
+    "warning": "※ This test is for entertainment purposes and is not a medical diagnosis",
+    "startButton": "Start Test"
+  },
+  "test": {
+    "progress": "{{current}} / {{total}}",
+    "loading": "Analyzing your results...",
+    "loadingSubtext": "Deep analysis in progress based on your answers"
+  },
+  "result": {
+    "title": "Test Results",
+    "percentage": "Psychopathic Tendency: {{percentage}}%",
+    "shareButton": "Share Results",
+    "retryButton": "Retry Test",
+    "saveButton": "Save Results",
+    "shareText": "My Psychopath Test Result: {{percentage}}% - {{title}} | Truth in Darkness Test"
+  },
+  "common": {
+    "homeButton": "Go to JYBR Home",
+    "footer": "Powered by JYBR"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "intro": {
+    "title": "사이코패스 테스트",
+    "subtitle": "어둠 속 진실",
+    "description": "당신의 내면 깊숙이 숨겨진 어두운 면을 탐구해보세요. 5개의 심리학적 질문을 통해 당신의 진짜 모습을 발견할 수 있습니다. 이 테스트는 과학적 근거에 기반하여 제작되었으며, 당신의 숨겨진 성향을 객관적으로 분석합니다.",
+    "warning": "※ 이 테스트는 오락용이며 의학적 진단이 아닙니다",
+    "startButton": "테스트 시작하기"
+  },
+  "test": {
+    "progress": "{{current}} / {{total}}",
+    "loading": "결과를 분석하고 있습니다...",
+    "loadingSubtext": "당신의 답변을 바탕으로 심층 분석 중"
+  },
+  "result": {
+    "title": "테스트 결과",
+    "percentage": "사이코패스 성향: {{percentage}}%",
+    "shareButton": "결과 공유하기",
+    "retryButton": "다시 테스트하기",
+    "saveButton": "결과 저장하기",
+    "shareText": "나의 사이코패스 테스트 결과: {{percentage}}% - {{title}} | 어둠 속 진실 테스트"
+  },
+  "common": {
+    "homeButton": "JYBR 홈으로",
+    "footer": "Powered by JYBR"
+  }
+}
