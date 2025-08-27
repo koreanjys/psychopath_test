@@ -27,20 +27,40 @@ const App: React.FC = () => {
   // URL에서 공유된 결과 확인 - useCallback으로 메모이제이션
   const checkSharedResult = useCallback(() => {
     const sharedData = decodeResultFromUrl();
+    
+    // HTML 페이지 경로를 확인하여 기본 언어 설정 (방향 전환!)
+    const isKoreanPage = window.location.pathname.includes('ko.html');
+    const defaultLanguage = isKoreanPage ? 'ko' : 'en'; // 기본이 영어로 변경
+    
+    console.log('🌐 Page detection:', {
+      pathname: window.location.pathname,
+      isKoreanPage,
+      defaultLanguage,
+      sharedData
+    });
+    
     if (sharedData) {
       // 언어 정규화 함수
       const normalizeLanguage = (lang: string): 'ko' | 'en' => {
         const lowerLang = lang.toLowerCase();
         if (lowerLang.startsWith('ko')) return 'ko';
         if (lowerLang.startsWith('en')) return 'en';
-        return 'ko'; // 기본값
+        return defaultLanguage; // 페이지에 따른 기본값
       };
       
-      // 공유된 언어 정보가 있으면 언어 변경
-      if (sharedData.language) {
-        const normalizedLang = normalizeLanguage(sharedData.language);
-        console.log('Shared language detected:', sharedData.language, '→', normalizedLang);
-        i18n.changeLanguage(normalizedLang);
+      // 공유된 언어 정보가 있으면 언어 변경, 없으면 페이지 기본값 사용
+      const targetLanguage = sharedData.language ? 
+        normalizeLanguage(sharedData.language) : 
+        defaultLanguage;
+      
+      console.log('🔍 Language setting:', {
+        sharedLanguage: sharedData.language,
+        targetLanguage,
+        currentLanguage: i18n.language
+      });
+      
+      if (targetLanguage !== i18n.language) {
+        i18n.changeLanguage(targetLanguage);
       }
       
       // 공유된 결과가 있으면 해당 결과로 바로 이동
@@ -50,6 +70,15 @@ const App: React.FC = () => {
         setPhase('result');
         setIsSharedResult(true);
       }
+    } else if (isKoreanPage && i18n.language !== 'ko') {
+      // 한국어 페이지에서 로드되었지만 공유 데이터가 없는 경우 한국어로 설정
+      console.log('�� Setting language to Korean for ko.html page');
+      i18n.changeLanguage('ko');
+    } else if (!isKoreanPage && i18n.language !== 'en') {
+      // 기본 페이지(영어)에서 로드되었지만 언어가 영어가 아닌 경우
+      // 한국어 사용자라면 자동으로 한국어로 전환할 수 있지만, 
+      // 일단 기본 영어 유지 (나중에 자동 리다이렉트 추가 가능)
+      console.log('🇺🇸 Default page loaded, keeping current language or using English');
     }
   }, [i18n]); // i18n 의존성 추가
 

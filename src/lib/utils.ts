@@ -111,8 +111,20 @@ export const encodeResultToUrl = (percentage: number, resultIndex: number, langu
     params.lang = language;
   }
   
-  setUrlParams(params);
-  return window.location.href;
+  // 한국어인 경우 ko.html로, 영어인 경우 기본 페이지로 (방향 전환!)
+  const basePath = language === 'ko' ? '/ko.html' : '/';
+  const origin = window.location.origin;
+  const searchParams = new URLSearchParams(params);
+  const shareUrl = `${origin}${basePath}?${searchParams.toString()}`;
+  
+  console.log('🔗 Generated share URL:', {
+    language,
+    basePath,
+    params,
+    shareUrl
+  });
+  
+  return shareUrl;
 };
 
 export const decodeResultFromUrl = (): SharedResultData | null => {

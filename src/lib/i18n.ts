@@ -13,7 +13,7 @@ i18n
       ko: { translation: koTranslations },
       en: { translation: enTranslations }
     },
-    fallbackLng: 'ko',
+    fallbackLng: 'en', // 기본 언어를 영어로 변경
     debug: false,
     interpolation: {
       escapeValue: false
@@ -23,11 +23,11 @@ i18n
       caches: ['localStorage', 'cookie'],
       lookupFromPathIndex: 0,
       lookupFromSubdomainIndex: 0,
-      // 한국어 관련 모든 코드를 'ko'로 매핑
+      // 한국어 관련 모든 코드를 'ko'로 매핑, 그 외는 영어로
       convertDetectedLanguage: (lng: string) => {
         // 한국어 관련 코드들 (ko, ko-KR, ko-kr, kor 등)
         if (lng.toLowerCase().startsWith('ko')) return 'ko';
-        // 그 외는 모두 영어로
+        // 그 외는 모두 영어로 (기본 언어가 영어로 변경됨)
         return 'en';
       }
     },

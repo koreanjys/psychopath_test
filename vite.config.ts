@@ -7,6 +7,10 @@ export default defineConfig({
   build: {
     target: 'es2015',
     rollupOptions: {
+      input: {
+        main: './index.html',
+        ko: './public/ko.html'
+      },
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
