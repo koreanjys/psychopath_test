@@ -13,7 +13,7 @@ import { calculateResult } from './data/scoring';
 import { TestPhase, UserAnswer, TestResult } from './types/test';
 
 const App: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [isI18nReady, setIsI18nReady] = useState(false);
   const [phase, setPhase] = useState<TestPhase>('intro');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -75,10 +75,18 @@ const App: React.FC = () => {
   };
 
   const renderPhase = () => {
+    console.log('Current phase:', phase); // 디버깅용
+    console.log('Current question index:', currentQuestionIndex); // 디버깅용
+    console.log('Questions array:', questions); // 디버깅용
+    
     switch (phase) {
       case 'intro':
         return <Intro onStart={handleStart} />;
       case 'question':
+        if (!questions[currentQuestionIndex]) {
+          console.error('Question not found at index:', currentQuestionIndex);
+          return <div style={{ color: '#fff', padding: '2rem' }}>{t('common.noQuestionError')}</div>;
+        }
         return (
           <Question
             question={questions[currentQuestionIndex]}
@@ -107,7 +115,7 @@ const App: React.FC = () => {
         minHeight: '100vh'
       }}>
         <div style={{ color: '#fff', fontSize: '1.2rem' }}>
-          Loading...
+          {i18n.language ? t('common.loading') : 'Loading...'}
         </div>
       </div>
     );

@@ -9,7 +9,11 @@
   "test": {
     "progress": "{{current}} / {{total}}",
     "loading": "결과를 분석하고 있습니다...",
-    "loadingSubtext": "당신의 답변을 바탕으로 심층 분석 중"
+    "loadingSubtext": "당신의 답변을 바탕으로 심층 분석 중",
+    "questionTitle": "테스트 질문",
+    "questionNumber": "질문 번호: {{current}} / {{total}}",
+    "dataError": "질문 데이터를 불러올 수 없습니다.",
+    "translationError": "번역 데이터를 불러올 수 없습니다."
   },
   "result": {
     "title": "테스트 결과",
@@ -17,10 +21,15 @@
     "shareButton": "결과 공유하기",
     "retryButton": "다시 테스트하기",
     "saveButton": "결과 저장하기",
-    "shareText": "나의 사이코패스 테스트 결과: {{percentage}}% - {{title}} | 어둠 속 진실 테스트"
+    "shareText": "나의 사이코패스 테스트 결과: {{percentage}}% - {{title}} | 어둠 속 진실 테스트",
+    "copySuccess": "결과 링크가 클립보드에 복사되었습니다!",
+    "shareTitle": "사이코패스 테스트 결과"
   },
   "common": {
     "homeButton": "JYBR 홈으로",
-    "footer": "Powered by JYBR"
+    "footer": "Powered by JYBR",
+    "noQuestionError": "질문을 불러올 수 없습니다.",
+    "loading": "로딩 중...",
+    "languageButton": "EN"
   }
 }

@@ -18,7 +18,7 @@ const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
       percentage: result.percentage, 
       title: result.title[currentLang] 
     });
-    shareResults('사이코패스 테스트 결과', shareText);
+    shareResults(t('result.shareTitle'), shareText);
   };
 
   const handleSave = async () => {
@@ -33,7 +33,7 @@ const Result: React.FC<ResultProps> = ({ result, onRestart }) => {
       } else {
         // PC에서는 간단히 현재 페이지의 URL을 복사
         await navigator.clipboard.writeText(window.location.href);
-        alert('결과 링크가 클립보드에 복사되었습니다!');
+        alert(t('result.copySuccess'));
       }
     } catch (error) {
       console.error('Save failed:', error);

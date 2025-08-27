@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Question as QuestionType } from '../../types/test';
-import Progress from './Progress';
 
 interface QuestionProps {
   question: QuestionType;
@@ -16,11 +15,24 @@ const Question: React.FC<QuestionProps> = ({
   totalQuestions, 
   onAnswer 
 }) => {
-  const { i18n } = useTranslation();
-  const currentLang = i18n.language as 'ko' | 'en';
+  const { i18n, t } = useTranslation();
+  
+  // 언어 매핑: ko-KR, ko-kr, ko 등을 모두 'ko'로, en-US, en-us, en 등을 모두 'en'으로
+  const normalizeLanguage = (lang: string): 'ko' | 'en' => {
+    const lowerLang = lang.toLowerCase();
+    if (lowerLang.startsWith('ko')) return 'ko';
+    if (lowerLang.startsWith('en')) return 'en';
+    return 'ko'; // 기본값
+  };
+  
+  const currentLang = normalizeLanguage(i18n.language || 'ko');
+
+  console.log('Question component rendered:', { question, currentIndex, totalQuestions });
+  console.log('Current language:', currentLang, 'Original:', i18n.language);
 
   const handleAnswer = (optionIndex: number) => {
     const score = question.scoring[optionIndex];
+    console.log('Answer selected:', { optionIndex, score });
     onAnswer(question.id, optionIndex, score);
   };
 
@@ -35,96 +47,67 @@ const Question: React.FC<QuestionProps> = ({
       background: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0c0c0c 100%)',
       color: '#fff',
       paddingTop: '6rem'
-    },
-    questionCard: {
-      maxWidth: '800px',
-      width: '100%',
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '1rem',
-      padding: '2rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(10px)',
-      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
-    },
-    questionText: {
-      fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
-      lineHeight: '1.6',
-      marginBottom: '2rem',
-      textAlign: 'center' as const,
-      color: '#fff',
-      fontWeight: '500'
-    },
-    imageContainer: {
-      width: '100%',
-      maxWidth: '400px',
-      height: '250px',
-      margin: '2rem auto',
-      borderRadius: '0.8rem',
-      overflow: 'hidden',
-      boxShadow: '0 15px 30px rgba(0, 0, 0, 0.5)',
-      border: '1px solid rgba(255, 255, 255, 0.1)'
-    },
-    image: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover' as const,
-      filter: 'brightness(0.8) saturate(1.1)'
-    },
-    optionsContainer: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '1rem',
-      marginTop: '2rem'
-    },
-    option: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      borderRadius: '0.8rem',
-      padding: '1.5rem',
-      color: '#fff',
-      fontSize: '1.1rem',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textAlign: 'left' as const,
-      lineHeight: '1.5'
     }
   };
 
+  // 질문 데이터 검증
+  if (!question || !question.text || !question.options) {
+    console.error('Invalid question data:', question);
+    return (
+      <div style={questionStyle.container}>
+        <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>
+          {t('test.dataError')}
+        </div>
+      </div>
+    );
+  }
+
+  if (!question.text[currentLang] || !question.options[currentLang]) {
+    console.error('Missing translation for language:', currentLang);
+    return (
+      <div style={questionStyle.container}>
+        <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>
+          {t('test.translationError')}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={questionStyle.container}>
-      <Progress current={currentIndex + 1} total={totalQuestions} />
-      
-      <div style={questionStyle.questionCard}>
-        <h2 style={questionStyle.questionText}>
+      <div style={{ color: '#fff', textAlign: 'center', padding: '2rem', maxWidth: '600px' }}>
+        <h2 style={{ marginBottom: '2rem' }}>{t('test.questionTitle')}</h2>
+        <p style={{ marginBottom: '1rem' }}>{t('test.questionNumber', { current: currentIndex + 1, total: totalQuestions })}</p>
+        <p style={{ marginBottom: '2rem', fontSize: '1.2rem', lineHeight: '1.6' }}>
           {question.text[currentLang]}
-        </h2>
+        </p>
         
-        <div style={questionStyle.imageContainer}>
-          <img 
-            src={question.image}
-            alt={`Question ${question.id}`}
-            style={questionStyle.image}
-          />
-          {/* 개발자 참고: 각 질문에 맞는 오싹한 이미지로 교체하세요 */}
-        </div>
-        
-        <div style={questionStyle.optionsContainer}>
+        <div style={{ marginTop: '2rem' }}>
           {question.options[currentLang].map((option, index) => (
-            <button
+            <button 
               key={index}
-              style={questionStyle.option}
               onClick={() => handleAnswer(index)}
+              style={{ 
+                background: 'rgba(255, 255, 255, 0.1)', 
+                color: '#fff', 
+                padding: '1rem', 
+                border: '1px solid rgba(255, 255, 255, 0.3)', 
+                borderRadius: '0.5rem',
+                margin: '0.5rem 0',
+                cursor: 'pointer',
+                display: 'block',
+                width: '100%',
+                textAlign: 'left',
+                fontSize: '1rem',
+                transition: 'all 0.3s ease'
+              }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 107, 107, 0.1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 107, 107, 0.5)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 107, 107, 0.2)';
+                e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)';
+                e.currentTarget.style.borderColor = '#ff6b6b';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
               }}
             >
               <span style={{ marginRight: '1rem', fontWeight: 'bold', color: '#ff6b6b' }}>

@@ -9,7 +9,11 @@
   "test": {
     "progress": "{{current}} / {{total}}",
     "loading": "Analyzing your results...",
-    "loadingSubtext": "Deep analysis in progress based on your answers"
+    "loadingSubtext": "Deep analysis in progress based on your answers",
+    "questionTitle": "Test Question",
+    "questionNumber": "Question {{current}} / {{total}}",
+    "dataError": "Unable to load question data.",
+    "translationError": "Unable to load translation data."
   },
   "result": {
     "title": "Test Results",
@@ -17,10 +21,15 @@
     "shareButton": "Share Results",
     "retryButton": "Retry Test",
     "saveButton": "Save Results",
-    "shareText": "My Psychopath Test Result: {{percentage}}% - {{title}} | Truth in Darkness Test"
+    "shareText": "My Psychopath Test Result: {{percentage}}% - {{title}} | Truth in Darkness Test",
+    "copySuccess": "Result link copied to clipboard!",
+    "shareTitle": "Psychopath Test Results"
   },
   "common": {
     "homeButton": "Go to JYBR Home",
-    "footer": "Powered by JYBR"
+    "footer": "Powered by JYBR",
+    "noQuestionError": "Unable to load questions.",
+    "loading": "Loading...",
+    "languageButton": "한국어"
   }
 }
