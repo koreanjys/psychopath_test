@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import './lib/i18n';
 import './index.css';
@@ -24,6 +24,20 @@ const App: React.FC = () => {
   const [result, setResult] = useState<TestResult | null>(null);
   const [isSharedResult, setIsSharedResult] = useState(false);
 
+  // URL에서 공유된 결과 확인 - useCallback으로 메모이제이션
+  const checkSharedResult = useCallback(() => {
+    const sharedData = decodeResultFromUrl();
+    if (sharedData) {
+      // 공유된 결과가 있으면 해당 결과로 바로 이동
+      const sharedResult = results.find(r => r.percentage === sharedData.percentage);
+      if (sharedResult) {
+        setResult(sharedResult);
+        setPhase('result');
+        setIsSharedResult(true);
+      }
+    }
+  }, []); // 의존성 없음 - 모든 필요한 값이 함수 내부에서 직접 계산됨
+
   useEffect(() => {
     // i18n 초기화 완료 확인
     if (i18n.isInitialized) {
@@ -35,21 +49,7 @@ const App: React.FC = () => {
         checkSharedResult();
       });
     }
-  }, [i18n]);
-
-  // URL에서 공유된 결과 확인
-  const checkSharedResult = () => {
-    const sharedData = decodeResultFromUrl();
-    if (sharedData) {
-      // 공유된 결과가 있으면 해당 결과로 바로 이동
-      const sharedResult = results.find(r => r.percentage === sharedData.percentage);
-      if (sharedResult) {
-        setResult(sharedResult);
-        setPhase('result');
-        setIsSharedResult(true);
-      }
-    }
-  };
+  }, [i18n, checkSharedResult]); // checkSharedResult 의존성 추가
 
   const handleStart = () => {
     console.log('Starting test...'); // 디버깅용

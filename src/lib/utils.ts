@@ -82,9 +82,29 @@ export const decodeResultFromUrl = () => {
   const shared = params.get('shared');
   
   if (percentage && type && shared) {
+    const parsedPercentage = parseInt(percentage, 10);
+    const parsedType = parseInt(type, 10);
+    
+    // 파싱 결과 검증
+    if (isNaN(parsedPercentage) || isNaN(parsedType)) {
+      console.error('Invalid URL parameters:', { percentage, type });
+      return null;
+    }
+    
+    // 범위 검증
+    if (parsedPercentage < 0 || parsedPercentage > 100) {
+      console.error('Percentage out of range:', parsedPercentage);
+      return null;
+    }
+    
+    if (parsedType < 0 || parsedType > 4) { // 결과 타입은 0-4 범위
+      console.error('Result type out of range:', parsedType);
+      return null;
+    }
+    
     return {
-      percentage: parseInt(percentage),
-      resultIndex: parseInt(type),
+      percentage: parsedPercentage,
+      resultIndex: parsedType,
       isShared: true
     };
   }

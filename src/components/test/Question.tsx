@@ -31,6 +31,16 @@ const Question: React.FC<QuestionProps> = ({
   console.log('Current language:', currentLang, 'Original:', i18n.language);
 
   const handleAnswer = (optionIndex: number) => {
+    // 배열 경계 검사 추가
+    if (!question.scoring || optionIndex < 0 || optionIndex >= question.scoring.length) {
+      console.error('Invalid option index or missing scoring array:', { 
+        optionIndex, 
+        scoringLength: question.scoring?.length || 0,
+        scoring: question.scoring 
+      });
+      return; // 잘못된 인덱스일 경우 함수 종료
+    }
+    
     const score = question.scoring[optionIndex];
     console.log('Answer selected:', { optionIndex, score });
     onAnswer(question.id, optionIndex, score);
@@ -50,9 +60,25 @@ const Question: React.FC<QuestionProps> = ({
     }
   };
 
-  // 질문 데이터 검증
-  if (!question || !question.text || !question.options) {
+  // 질문 데이터 검증 강화
+  if (!question || !question.text || !question.options || !question.scoring) {
     console.error('Invalid question data:', question);
+    return (
+      <div style={questionStyle.container}>
+        <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>
+          {t('test.dataError')}
+        </div>
+      </div>
+    );
+  }
+
+  // 옵션과 스코어링 배열 길이 일치 검증
+  if (question.options[currentLang] && question.options[currentLang].length !== question.scoring.length) {
+    console.error('Options and scoring array length mismatch:', {
+      optionsLength: question.options[currentLang]?.length || 0,
+      scoringLength: question.scoring.length,
+      currentLang
+    });
     return (
       <div style={questionStyle.container}>
         <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>

@@ -52,18 +52,81 @@ const Result: React.FC<ResultProps> = ({ result, onRestart, isShared = false }) 
         const fileName = `psychopath-test-result-${result.percentage}%.png`;
 
         if (isMobile()) {
-          // 모바일: 파일 다운로드로 사진첩 저장 유도
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
+          // 모바일: 이미지를 새 탭에서 열어서 사용자가 길게 눌러서 저장하도록 안내
+          const canvas2 = document.createElement('canvas');
+          const ctx = canvas2.getContext('2d');
           
-          // 모바일 사용자에게 안내 메시지
-          alert(t('result.mobileDownloadTip'));
+          canvas2.width = canvas.width;
+          canvas2.height = canvas.height;
+          
+          if (ctx) {
+            ctx.drawImage(canvas, 0, 0);
+            
+            // 이미지를 data URL로 변환
+            const dataURL = canvas2.toDataURL('image/png', 0.95);
+            
+            // 새 창에서 이미지 열기
+            const newWindow = window.open();
+            if (newWindow) {
+              newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>테스트 결과 저장</title>
+                  <style>
+                    body {
+                      margin: 0;
+                      padding: 20px;
+                      background: #000;
+                      color: #fff;
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                      text-align: center;
+                    }
+                    .instruction {
+                      margin-bottom: 20px;
+                      font-size: 16px;
+                      line-height: 1.5;
+                    }
+                    .highlight {
+                      color: #ff6b6b;
+                      font-weight: bold;
+                    }
+                    img {
+                      max-width: 100%;
+                      height: auto;
+                      border-radius: 10px;
+                      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+                    }
+                    .close-btn {
+                      margin-top: 20px;
+                      padding: 10px 20px;
+                      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+                      color: white;
+                      border: none;
+                      border-radius: 5px;
+                      font-size: 16px;
+                      cursor: pointer;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <div class="instruction">
+                    📱 <span class="highlight">이미지를 길게 눌러서</span> "이미지 저장" 또는 "사진에 저장"을 선택하세요
+                  </div>
+                  <img src="${dataURL}" alt="사이코패스 테스트 결과" />
+                  <br>
+                  <button class="close-btn" onclick="window.close()">창 닫기</button>
+                </body>
+                </html>
+              `);
+              newWindow.document.close();
+            } else {
+              // 팝업이 차단된 경우 폴백
+              fallbackDownload(blob, fileName);
+            }
+          }
         } else {
           // PC: File System Access API 지원 여부 확인
           if ('showSaveFilePicker' in window) {
