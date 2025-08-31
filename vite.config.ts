@@ -9,7 +9,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: './index.html',
-        ko: './public/ko.html'
+        ko: './ko.html'
       },
       output: {
         manualChunks: {
